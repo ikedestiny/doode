@@ -116,6 +116,12 @@ We follow a simplified Git Flow workflow to ensure smooth collaboration between 
    - When ready for production, create a PR from `develop` to `main`
    - Tag the release with a version number (e.g., v1.0.0)
 
+7. **Quickest Workflow**
+   - ./gradlew build -x test && docker-compose down && docker-compose up --build -d 
+   ```
+   ./gradlew build -x test && docker-compose down && docker-compose up --build -d
+   ```
+
 ### Best Practices for Collaboration
 
 1. **API Contracts First**: Define API endpoints and data structures before implementation

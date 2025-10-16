@@ -1,9 +1,9 @@
 package com.dev.doode.repository;
 
-import com.dev.doode.model.FoodVendor;
+import com.dev.doode.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FoodVendorRepository extends JpaRepository<FoodVendor, Long> {
+public interface PersonRepository extends JpaRepository<Person, Long> {
 }

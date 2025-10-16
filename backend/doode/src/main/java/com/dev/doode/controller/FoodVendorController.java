@@ -1,4 +1,46 @@
 package com.dev.doode.controller;
 
+import com.dev.doode.model.FoodVendor;
+import com.dev.doode.service.FoodVendorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/doode/vendors")
 public class FoodVendorController {
+
+    @Autowired
+    private FoodVendorService foodVendorService;
+
+    @GetMapping
+    public ResponseEntity<List<FoodVendor>> getAllVendors() {
+        return ResponseEntity.ok(foodVendorService.getAllVendors());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FoodVendor> getVendorById(@PathVariable Long id) {
+        Optional<FoodVendor> vendorById = foodVendorService.getVendorById(id);
+        return vendorById.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<FoodVendor> createVendor(@RequestBody FoodVendor vendor) {
+        return new ResponseEntity<>(foodVendorService.saveVendor(vendor), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FoodVendor> updateVendor(@PathVariable Long id, @RequestBody FoodVendor vendor) {
+        return ResponseEntity.ok(foodVendorService.updateVendor(id, vendor));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteVendor(@PathVariable Long id) {
+        foodVendorService.deleteVendor(id);
+        return ResponseEntity.noContent().build();
+    }
 }
