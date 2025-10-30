@@ -5,6 +5,8 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 public class FoodVendor {
@@ -19,11 +21,10 @@ public class FoodVendor {
     @OneToOne
     @JoinColumn(name = "owner_id")
     public Person businessOwner;
-    @NotBlank(message = "Address is required")
     private String address;
     private Boolean delivery;
     private String menuImagePath;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "food_vendor_id")
-    private ArrayList<Delicacy> delicacies =  new ArrayList<>();
+    private List<Delicacy> delicacies =  new ArrayList<>();
 }

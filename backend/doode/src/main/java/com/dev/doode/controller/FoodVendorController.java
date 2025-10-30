@@ -37,8 +37,9 @@ public class FoodVendorController {
     public ResponseEntity<FoodVendor> createVendor(@RequestBody VendorDto vendorDto) {
         FoodVendor vendor = new FoodVendor();
         vendor.setName(vendorDto.name());
-        vendor.setCity(City.valueOf(vendorDto.city()));
+        vendor.setCity(City.fromString(vendorDto.city()));
         vendor.setBusinessOwner(personService.findPersonById(vendorDto.ownerId()));
+        vendor.setAddress("----");
         return new ResponseEntity<>(foodVendorService.saveVendor(vendor), HttpStatus.CREATED);
     }
 

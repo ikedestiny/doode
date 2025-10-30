@@ -7,6 +7,9 @@
 GRADLE = ./gradlew
 DOCKER_COMPOSE = docker-compose
 DC_FILE = compose.yaml
+PG =  doode-postgres-1
+DB_USER =  myuser
+DB = mydatabase
 
 # Default target
 all: up
@@ -22,7 +25,7 @@ check-docker:
 # 🧩 Build Spring Boot app and rebuild/start Docker containers
 up: check-docker
 	@echo "🚀 Building Spring Boot app and restarting Docker containers..."
-	$(GRADLE) build -x test && $(DOCKER_COMPOSE) down && $(DOCKER_COMPOSE) up --build -d
+	$(GRADLE) build -x test && $(DOCKER_COMPOSE) down && $(DOCKER_COMPOSE) up --build
 	@echo "✅ Application built and containers are running."
 
 # 🧱 Build the app (no Docker)
@@ -52,3 +55,7 @@ clean:
 # 🧭 Show Docker container status
 status: check-docker
 	@$(DOCKER_COMPOSE) ps
+
+db: check-docker
+	@echo "logging into postgres dg"
+	@docker exec -it $(PG) psql -U $(DB_USER) -d $(DB)

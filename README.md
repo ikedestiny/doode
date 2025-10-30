@@ -135,6 +135,7 @@ We follow a simplified Git Flow workflow to ensure smooth collaboration between 
 1. Ensure you have the required technologies installed:
    - Java JDK 11+
    - Node.js
+   - Docker
    - PostgreSQL
    - Xcode (for iOS development)
 
