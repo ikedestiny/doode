@@ -47,4 +47,10 @@ public class PersonController {
         return ResponseEntity.ok(personService.getAllPersons());
     }
 
+    @DeleteMapping("{}")
+    public void deleteUser(@PathVariable Integer id){
+        personService.deletePerson(id);
+    }
+
+
 }

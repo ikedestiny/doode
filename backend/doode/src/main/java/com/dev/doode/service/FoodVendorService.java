@@ -2,6 +2,7 @@ package com.dev.doode.service;
 
 import com.dev.doode.model.FoodVendor;
 import com.dev.doode.repository.FoodVendorRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,15 @@ public class FoodVendorService {
     }
 
     public void deleteVendor(Long id) {
-        foodVendorRepository.delete(foodVendorRepository.findById(id).get());
+        foodVendorRepository.delete(foodVendorRepository.findById(id).orElseThrow(()->new RuntimeException("No user with such ID")));
     }
+
+    @Transactional
+    public void updateRating(Long id, Integer rate) {
+        int updated = foodVendorRepository.updateRatingAtomic(id, rate);
+        if (updated == 0) {
+            throw new RuntimeException("Vendor not found");
+        }
+    }
+
 }

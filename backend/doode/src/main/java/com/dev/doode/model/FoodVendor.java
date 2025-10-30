@@ -1,5 +1,6 @@
 package com.dev.doode.model;
 
+import com.dev.doode.helpers.Rating;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -27,4 +28,6 @@ public class FoodVendor {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "food_vendor_id")
     private List<Delicacy> delicacies =  new ArrayList<>();
+    private Rating rating;
+    private List<String> reviews;
 }
