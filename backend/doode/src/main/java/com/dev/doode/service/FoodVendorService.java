@@ -34,16 +34,13 @@ public class FoodVendorService {
         existingVendor.setBusinessOwner(vendorDetails.getBusinessOwner());
         existingVendor.setAddress(vendorDetails.getAddress());
         existingVendor.setDelivery(vendorDetails.getDelivery());
-        existingVendor.setPhoneNumber(vendorDetails.getPhoneNumber());
         existingVendor.setMenuImagePath(vendorDetails.getMenuImagePath());
-        existingVendor.setEmail(vendorDetails.getEmail());
         existingVendor.setDelicacies(vendorDetails.getDelicacies());
 
         return foodVendorRepository.save(existingVendor);
     }
 
     public void deleteVendor(Long id) {
-
         foodVendorRepository.delete(foodVendorRepository.findById(id).get());
     }
 }

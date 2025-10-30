@@ -22,12 +22,7 @@ public class FoodVendor {
     @NotBlank(message = "Address is required")
     private String address;
     private Boolean delivery;
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\+?[0-9\\-\\s()]{10,}$", message = "Invalid phone number format")
-    private String phoneNumber;
     private String menuImagePath;
-    @Email(message = "Invalid email format")
-    private String email;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "food_vendor_id")
     private ArrayList<Delicacy> delicacies =  new ArrayList<>();

@@ -1,7 +1,10 @@
 package com.dev.doode.controller;
 
+import com.dev.doode.dto.VendorDto;
+import com.dev.doode.model.City;
 import com.dev.doode.model.FoodVendor;
 import com.dev.doode.service.FoodVendorService;
+import com.dev.doode.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,8 @@ public class FoodVendorController {
 
     @Autowired
     private FoodVendorService foodVendorService;
+    @Autowired
+    private PersonService personService;
 
     @GetMapping
     public ResponseEntity<List<FoodVendor>> getAllVendors() {
@@ -29,7 +34,11 @@ public class FoodVendorController {
     }
 
     @PostMapping
-    public ResponseEntity<FoodVendor> createVendor(@RequestBody FoodVendor vendor) {
+    public ResponseEntity<FoodVendor> createVendor(@RequestBody VendorDto vendorDto) {
+        FoodVendor vendor = new FoodVendor();
+        vendor.setName(vendorDto.name());
+        vendor.setCity(City.valueOf(vendorDto.city()));
+        vendor.setBusinessOwner(personService.findPersonById(vendorDto.ownerId()));
         return new ResponseEntity<>(foodVendorService.saveVendor(vendor), HttpStatus.CREATED);
     }
 
