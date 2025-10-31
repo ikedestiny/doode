@@ -1,10 +1,12 @@
 package com.dev.doode.model;
 
 import com.dev.doode.helpers.City;
-import com.dev.doode.helpers.Rating;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.antlr.v4.runtime.misc.Pair;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,12 @@ public class FoodVendor {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "food_vendor_id")
     private List<Delicacy> delicacies =  new ArrayList<>();
-    private Rating rating;
+    private Integer totalRatings;
+    private Double averageRating;
+    private Pair<Integer, Double> Rating;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
     private Map<Long, String> reviews;
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
 }

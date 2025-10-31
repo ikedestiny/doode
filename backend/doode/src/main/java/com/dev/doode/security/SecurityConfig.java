@@ -20,8 +20,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/doode/person/login",
-                                                  "/api/doode/person/register").permitAll()
+                        .requestMatchers("/api/doode/auth/login",
+                                                  "/api/doode/auth/register").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

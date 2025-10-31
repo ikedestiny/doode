@@ -3,6 +3,7 @@ package com.dev.doode.controller;
 import com.dev.doode.dto.VendorDto;
 import com.dev.doode.helpers.City;
 import com.dev.doode.model.FoodVendor;
+import com.dev.doode.model.Order;
 import com.dev.doode.service.FoodVendorService;
 import com.dev.doode.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,7 @@ public class FoodVendorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FoodVendor> getVendorById(@PathVariable Long id) {
-        Optional<FoodVendor> vendorById = foodVendorService.getVendorById(id);
-        return vendorById.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(foodVendorService.getVendorById(id));
     }
 
     @PostMapping
@@ -53,5 +53,9 @@ public class FoodVendorController {
     public ResponseEntity<Void> deleteVendor(@PathVariable Long id) {
         foodVendorService.deleteVendor(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/{id}/active-orders")
+    public ResponseEntity<List<Order>> getActiveOrders(@PathVariable Long id){
+        return ResponseEntity.ok(foodVendorService.getActiveOrders(id));
     }
 }

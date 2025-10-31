@@ -13,6 +13,6 @@ import java.util.List;
 public interface PersonRepository extends JpaRepository<Person, Long> {
     List<Person> findByUsername(String username);
     @Modifying
-    @Query("UPDATE person p SET p.p_type = :pType WHERE p.id = :id")
-    int updatePType(@Param("id") Long id, @Param("pType") Integer pType);
+    @Query("UPDATE Person p SET p.pType = :pType WHERE p.id = :id")
+    void updatePType(@Param("id") Long id, @Param("pType") Integer pType);
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/doode/person")
+@RequestMapping("/api/doode/auth")
 public class AuthController {
 
     private final PersonService personService;

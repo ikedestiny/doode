@@ -1,18 +1,23 @@
 package com.dev.doode.service;
 
 import com.dev.doode.model.FoodVendor;
+import com.dev.doode.model.Order;
 import com.dev.doode.repository.FoodVendorRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FoodVendorService {
-    @Autowired
-    private FoodVendorRepository foodVendorRepository;
+    private final FoodVendorRepository foodVendorRepository;
+    private final OrderService orderService;
+
+    public FoodVendorService(FoodVendorRepository foodVendorRepository, OrderService orderService) {
+        this.foodVendorRepository = foodVendorRepository;
+        this.orderService = orderService;
+    }
 
     public FoodVendor saveVendor(FoodVendor vendor) {
         return foodVendorRepository.save(vendor);
@@ -22,8 +27,8 @@ public class FoodVendorService {
         return  foodVendorRepository.findAll();
     }
 
-    public Optional<FoodVendor> getVendorById(Long id) {
-        return foodVendorRepository.findById(id);
+    public FoodVendor getVendorById(Long id) {
+        return foodVendorRepository.findById(id).orElseThrow(()->new RuntimeException("no vendir with such id"));
     }
 
     public FoodVendor updateVendor(Long id, FoodVendor vendorDetails) {
@@ -60,4 +65,8 @@ public class FoodVendorService {
         return review + "ADDED";
     }
 
+    public List<Order> getActiveOrders(Long businessId){
+        FoodVendor vendor = foodVendorRepository.findById(businessId).orElseThrow(()->new RuntimeException("no vendor with such id"));
+        return orderService.getActiveVendorOrders(vendor);
+    }
 }
