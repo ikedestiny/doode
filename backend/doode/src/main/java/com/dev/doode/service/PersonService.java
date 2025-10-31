@@ -1,11 +1,11 @@
 package com.dev.doode.service;
 
+import com.dev.doode.helpers.PType;
 import com.dev.doode.model.Person;
 import com.dev.doode.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,6 +28,10 @@ public class PersonService {
 
     public Person findByUsername(String username){
         return personRepository.findByUsername(username).getFirst();
+    }
+
+    public void setTypeAsBusiness(Long id){
+        personRepository.updatePType(id,PType.VENDOR.ordinal());
     }
 
     public void deletePerson(Integer id) {

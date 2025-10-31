@@ -1,7 +1,7 @@
 package com.dev.doode.controller;
 
 import com.dev.doode.dto.VendorDto;
-import com.dev.doode.model.City;
+import com.dev.doode.helpers.City;
 import com.dev.doode.model.FoodVendor;
 import com.dev.doode.service.FoodVendorService;
 import com.dev.doode.service.PersonService;
@@ -38,6 +38,7 @@ public class FoodVendorController {
         FoodVendor vendor = new FoodVendor();
         vendor.setName(vendorDto.name());
         vendor.setCity(City.fromString(vendorDto.city()));
+        personService.setTypeAsBusiness(vendorDto.ownerId());
         vendor.setBusinessOwner(personService.findPersonById(vendorDto.ownerId()));
         vendor.setAddress("----");
         return new ResponseEntity<>(foodVendorService.saveVendor(vendor), HttpStatus.CREATED);

@@ -53,4 +53,11 @@ public class FoodVendorService {
         }
     }
 
+    public String addReview(String review, Long businessId, Long clientId){
+        FoodVendor vendor = foodVendorRepository.findById(businessId).orElseThrow(()->new RuntimeException("no business with this id"));
+        vendor.getReviews().put(clientId,review);
+        foodVendorRepository.save(vendor);
+        return review + "ADDED";
+    }
+
 }

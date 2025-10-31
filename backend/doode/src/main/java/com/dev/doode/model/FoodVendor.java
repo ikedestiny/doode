@@ -1,5 +1,6 @@
 package com.dev.doode.model;
 
+import com.dev.doode.helpers.City;
 import com.dev.doode.helpers.Rating;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -7,6 +8,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Data
@@ -29,5 +31,5 @@ public class FoodVendor {
     @JoinColumn(name = "food_vendor_id")
     private List<Delicacy> delicacies =  new ArrayList<>();
     private Rating rating;
-    private List<String> reviews;
+    private Map<Long, String> reviews;
 }

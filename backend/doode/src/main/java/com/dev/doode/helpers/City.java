@@ -1,4 +1,4 @@
-package com.dev.doode.model;
+package com.dev.doode.helpers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

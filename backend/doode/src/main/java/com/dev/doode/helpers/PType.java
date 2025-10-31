@@ -1,4 +1,4 @@
-package com.dev.doode.model;
+package com.dev.doode.helpers;
 
 public enum PType {
     VENDOR,

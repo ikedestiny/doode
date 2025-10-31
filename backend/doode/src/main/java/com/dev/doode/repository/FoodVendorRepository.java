@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface FoodVendorRepository extends JpaRepository<FoodVendor, Long> {
 
     @Modifying
-    @Query("UPDATE FoodVendor fv " +
+    @Query("UPDATE food_vendor fv " +
             "SET fv.rating.totalRatings = fv.rating.totalRatings + 1, " +
             "    fv.rating.averageRating = ((fv.rating.totalRatings * fv.rating.averageRating) + :rate) / (fv.rating.totalRatings + 1) " +
             "WHERE fv.id = :id")
