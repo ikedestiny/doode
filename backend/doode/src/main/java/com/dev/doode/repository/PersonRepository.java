@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.SequencedCollection;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
@@ -15,4 +16,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     @Modifying
     @Query("UPDATE Person p SET p.pType = :pType WHERE p.id = :id")
     void updatePType(@Param("id") Long id, @Param("pType") Integer pType);
+
+    List<Person> findByEmail(String email);
 }

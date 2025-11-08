@@ -29,6 +29,7 @@ public class PersonService {
     public Person findByUsername(String username){
         return personRepository.findByUsername(username).getFirst();
     }
+    public Person findByEmail(String email){return personRepository.findByEmail(email).getFirst();}
 
     public void setTypeAsBusiness(Long id){
         personRepository.updatePType(id,PType.VENDOR.ordinal());

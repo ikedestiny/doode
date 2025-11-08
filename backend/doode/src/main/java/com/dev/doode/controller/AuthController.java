@@ -1,5 +1,6 @@
 package com.dev.doode.controller;
 
+import com.dev.doode.dto.LoginDto;
 import com.dev.doode.dto.PersonDto;
 import com.dev.doode.model.Client;
 import com.dev.doode.helpers.PType;
@@ -33,15 +34,17 @@ public class AuthController {
     public Client registerNewClient(@RequestBody PersonDto personDto) {
         Client client = new Client();
         client.setUsername(personDto.username());
+        client.setEmail(personDto.email());
         client.setPassword(encoder.encode(personDto.password()));
         client.setPType(PType.CLIENT);
         return clientService.saveClient(client);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody PersonDto personDto) {
-        Person person = personService.findByUsername(personDto.username());
-        if (person == null || !encoder.check(personDto.password(), person.getPassword())) {
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
+        //Person person = personService.findByUsername(personDto.username());
+        Person person = personService.findByEmail(loginDto.email());
+        if (person == null || !encoder.check(loginDto.password(), person.getPassword())) {
             return ResponseEntity.status(401).body("Invalid username or password");
         }
 
