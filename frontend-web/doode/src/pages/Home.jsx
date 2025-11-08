@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Star, MapPin, Clock } from 'lucide-react';
+import DishesGrid from '../components/DishesGrid';
 
 const Home = () => {
   const featuredDishes = [
@@ -9,7 +10,7 @@ const Home = () => {
       id: 1,
       name: 'Jollof Rice',
       description: 'Traditional West African rice dish cooked in a rich tomato sauce',
-      price: 15.99,
+      price: 500,
       rating: 4.8,
       image:'src/images/jollof.png',
       vendor: 'Taste of Lagos'
@@ -18,7 +19,7 @@ const Home = () => {
       id: 2,
       name: 'Suya',
       description: 'Spicy Nigerian skewered beef with peanut spice rub',
-      price: 12.99,
+      price: 1000,
       rating: 4.9,
       image: 'src/images/suya.png',
       vendor: 'Abuja Grill'
@@ -27,7 +28,7 @@ const Home = () => {
       id: 3,
       name: 'Injera with Wat',
       description: 'Ethiopian sourdough flatbread with spicy stew',
-      price: 18.99,
+      price: 400,
       rating: 4.7,
       image: 'src/images/injeth.png',
       vendor: 'Addis Ababa Kitchen'
@@ -35,6 +36,27 @@ const Home = () => {
   ];
 
   const cities = ['Moscow', 'Saint Petersburg', 'Kazan', 'Novosibirsk', 'Yekaterinburg'];
+
+  // Handle order button click
+  const handleOrderClick = (dish) => {
+    console.log('Ordering dish:', dish);
+    // Add your order logic here
+    // For example: navigate to order page, add to cart, etc.
+  };
+
+  // Handle favorite button click
+  const handleFavoriteClick = (dish) => {
+    setFeaturedDishes(prevDishes => 
+      prevDishes.map(d => 
+        d.id === dish.id 
+          ? { ...d, isFavorite: !d.isFavorite }
+          : d
+      )
+    );
+    console.log('Toggled favorite for dish:', dish.name);
+    // Add your API call to update favorites here
+  };
+
 
   return (
     <div>
@@ -87,7 +109,7 @@ const Home = () => {
       </section>
 
       {/* Featured Dishes */}
-      <section className="py-16 bg-gray-50">
+         <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl font-bold">Trending Dishes</h2>
@@ -96,39 +118,17 @@ const Home = () => {
             </Link>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-  {featuredDishes.map((dish) => (
-    <div key={dish.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-      {/* Image Container - Fixed height with proper image sizing */}
-      <div className="h-48 bg-gray-200 overflow-hidden">
-        <img 
-          src={dish.image} 
-          alt={dish.name}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-        />
-      </div>
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-xl font-semibold text-gray-900">{dish.name}</h3>
-          <span className="text-african-gold font-bold">${dish.price}</span>
-        </div>
-        <p className="text-gray-600 mb-4">{dish.description}</p>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-1">
-            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            <span className="text-sm text-gray-700">{dish.rating}</span>
-          </div>
-          <span className="text-sm text-gray-500">{dish.vendor}</span>
-        </div>
-        <button className="w-full mt-4 bg-african-red text-white py-2 rounded-lg hover:bg-red-700 transition-colors">
-          Order Now
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
+          {/* Using DishesGrid component */}
+          <DishesGrid
+            dishes={featuredDishes}
+            onOrderClick={handleOrderClick}
+            onFavoriteClick={handleFavoriteClick}
+            columns={3}
+            showFavoriteButton={true}
+          />
         </div>
       </section>
+
 
       {/* Features Section */}
       <section className="py-16 bg-white">
