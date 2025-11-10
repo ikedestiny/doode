@@ -12,6 +12,7 @@ import Register from './pages/Register';
 import VendorDashboard from './pages/VendorDashboard';
 import Profile from './pages/Profile';
 import './styles/globals.css';
+import VendorProfile from './pages/VendorProfile';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/vendor" element={<VendorDashboard />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/vendor/:id" element={<VendorProfile />} />
             </Routes>
           </main>
           <Footer />

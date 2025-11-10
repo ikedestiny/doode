@@ -1,9 +1,7 @@
 package com.dev.doode.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -11,8 +9,22 @@ import lombok.Data;
 public class Delicacy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
+
     private String name;
     private Integer price;
     private String imagePath;
+
+    // Add description field for better search
+    private String description;
+
+    // Add relationship back to FoodVendor
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_vendor_id")
+    @JsonIgnore
+    private FoodVendor foodVendor;
+
+    // Consider adding rating fields for search/sorting
+    private Double averageRating = 0.0;
+    private Integer totalRatings = 0;
 }

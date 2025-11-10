@@ -1,5 +1,6 @@
 package com.dev.doode.repository;
 
+import com.dev.doode.helpers.PType;
 import com.dev.doode.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,7 +16,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     List<Person> findByUsername(String username);
     @Modifying
     @Query("UPDATE Person p SET p.pType = :pType WHERE p.id = :id")
-    void updatePType(@Param("id") Long id, @Param("pType") Integer pType);
+    int updatePType(@Param("id") Long id, @Param("pType") PType pType);
 
     List<Person> findByEmail(String email);
 }

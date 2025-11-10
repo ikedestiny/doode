@@ -16,6 +16,7 @@ public class Person {
     @Column(unique = true)
     private String username;
     private String password;
+    @Enumerated(EnumType.ORDINAL)
     private PType pType;
     @Pattern(regexp = "^\\+?[0-9\\-\\s()]{10,}$", message = "Invalid phone number format")
     private String phoneNumber;

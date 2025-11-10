@@ -1,6 +1,7 @@
 package com.dev.doode.controller;
 
 import com.dev.doode.dto.LoginDto;
+import com.dev.doode.dto.LoginResponse;
 import com.dev.doode.dto.PersonDto;
 import com.dev.doode.model.Client;
 import com.dev.doode.helpers.PType;
@@ -41,15 +42,21 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
-        //Person person = personService.findByUsername(personDto.username());
-        Person person = personService.findByEmail(loginDto.email());
-        if (person == null || !encoder.check(loginDto.password(), person.getPassword())) {
-            return ResponseEntity.status(401).body("Invalid username or password");
-        }
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+        try {
+            Person person = personService.findByEmail(loginDto.email());
+            if (person == null || !encoder.check(loginDto.password(), person.getPassword())) {
+                return ResponseEntity.status(401).body("Invalid username or password");
+            }
 
-        String token = jwtUtil.generateToken(person.getUsername());
-        return ResponseEntity.ok(token);
+            String token = jwtUtil.generateToken(person.getUsername());
+            LoginResponse response = new LoginResponse(person, token);
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Login failed: " + e.getMessage());
+        }
     }
 
     @GetMapping("/all")
