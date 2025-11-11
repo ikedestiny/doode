@@ -9,11 +9,13 @@ import lombok.Data;
 @Entity
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "person",
+        uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
     private String password;
     @Enumerated(EnumType.ORDINAL)

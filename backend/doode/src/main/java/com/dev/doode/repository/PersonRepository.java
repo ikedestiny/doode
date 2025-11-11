@@ -19,4 +19,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     int updatePType(@Param("id") Long id, @Param("pType") PType pType);
 
     List<Person> findByEmail(String email);
+
+    boolean existsByUsername(String username);
 }

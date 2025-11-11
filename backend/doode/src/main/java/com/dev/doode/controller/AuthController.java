@@ -10,6 +10,7 @@ import com.dev.doode.security.JwtUtil;
 import com.dev.doode.service.ClientService;
 import com.dev.doode.service.PersonService;
 import com.dev.doode.util.StringEncoder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +58,16 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Login failed: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7); // Remove "Bearer " prefix
+            Person person = personService.findByUsername(jwtUtil.extractUsername(token));
+            return ResponseEntity.ok(person);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/all")

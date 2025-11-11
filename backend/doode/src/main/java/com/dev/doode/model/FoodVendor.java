@@ -20,13 +20,14 @@ public class FoodVendor {
     private Long id;
 
     @NotBlank(message = "Vendor name is required")
+    @Column(unique = true)
     private String name;
 
     @NotNull(message = "City is required")
     private City city;
 
     @NotNull(message = "Business owner type is required")
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "owner_id")
     public Person businessOwner;
 

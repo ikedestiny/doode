@@ -68,6 +68,7 @@ export const useVendor = (vendorId) => {
       } else {
         // Use real API
         vendorData = await vendorService.getVendorById(vendorId);
+        console.log(vendorData)
       }
       
       setVendor(vendorData);

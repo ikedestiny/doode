@@ -54,9 +54,9 @@ export const authService = {
 };
 
 export const restaurantService = {
-  getAll: () => api.get('/restaurants').then(res => res.data),
-  getById: (id) => api.get(`/restaurants/${id}`).then(res => res.data),
-  create: (data) => api.post('/restaurants', data).then(res => res.data),
+  getAll: () => api.get('/vendors').then(res => res.data),
+  getById: (id) => api.get(`/vendors/${id}`).then(res => res.data),
+  create: (data) => api.post('/vendors', data).then(res => res.data),
 };
 
 export const dishService = {

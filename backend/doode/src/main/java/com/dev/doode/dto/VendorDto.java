@@ -5,5 +5,10 @@ public record VendorDto(
         String city,
         Long ownerId,
         String address,
-        Boolean delivery 
-) {}
+        Boolean delivery,
+        // Add these for batch generation
+        Integer count,
+        String businessType
+) {
+
+}

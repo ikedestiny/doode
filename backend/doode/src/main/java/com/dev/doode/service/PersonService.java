@@ -1,10 +1,12 @@
 package com.dev.doode.service;
 
+import com.dev.doode.exception.UsernameAlreadyExistsException;
 import com.dev.doode.helpers.PType;
 import com.dev.doode.model.Person;
 import com.dev.doode.repository.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +20,16 @@ public class PersonService {
     private PersonRepository personRepository;
 
 
-    public Person addNewUser(Person person){
-        return personRepository.save(person);
+    public Person addNewUser(Person person) throws UsernameAlreadyExistsException {
+        if (personRepository.existsByUsername(person.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        try {
+            return personRepository.save(person);
+        } catch (DataIntegrityViolationException e) {
+            // Database-level constraint violation
+            throw new UsernameAlreadyExistsException("Username already taken");
+        }
     }
 
     public List<Person> getAllPersons(){
