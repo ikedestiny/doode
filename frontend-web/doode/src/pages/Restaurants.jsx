@@ -3,15 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { restaurantService, dishService } from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorState from '../components/common/ErrorState';
+import DishCard from '../components/DishCard'; // Import DishCard
+
 
 // Premium food images for different African cuisines
 const FOOD_IMAGES = [
-  'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop', // Jollof Rice
-  'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop', // Grilled Meat
-  'https://images.unsplash.com/photo-1563379091339-03246963d96f?w=400&h=300&fit=crop', // African Stew
-  'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop', // Traditional Dish
-  'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop', // Fried Plantains
-  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', // Healthy Bowl
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_IAuXn-90FRCnOoccQWxuvzV7Ge16qv-0PA&s', // Jollof Rice
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpzlYq3BYuryErMo2sDb9YysTdkWs-1QeWng&s', // Grilled Meat
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROevRrpGR6c-vSo3mT4xpJrDCU69HDX1D-KA&s', // African Stew
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlGo4VicjjruN1Cjdf1wCWdTMucMfbKFEU6A&s', // Traditional Dish
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROOZCT0gcrjv7pCTcZgNik30ecsspz9isrCQ&s', // Fried Plantains
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbK-IdaiPLcSvBzhI6EJOwJRJ0NW_Q9sLmgg&s', // Healthy Bowl
 ];
 
 const Restaurants = () => {
@@ -26,29 +28,39 @@ const Restaurants = () => {
     fetchRestaurants();
   }, []);
 
-  const fetchRestaurants = async () => {
-    try {
-      setLoading(true);
-      const data = await restaurantService.getAll();
-      setRestaurants(data);
-      
-      const dishesPromises = data.map(restaurant => 
-        dishService.getByVendor(restaurant.id)
-          .then(dishes => ({ [restaurant.id]: dishes }))
-          .catch(() => ({ [restaurant.id]: [] }))
-      );
-      
-      const dishesResults = await Promise.all(dishesPromises);
-      const dishesMap = Object.assign({}, ...dishesResults);
-      setDishes(dishesMap);
-      
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch restaurants');
-      console.error('Error fetching restaurants:', err);
-    } finally {
-      setLoading(false);
-    }
+ const fetchRestaurants = async () => {
+  try {
+    setLoading(true);
+    const data = await restaurantService.getAll();
+    setRestaurants(data);
+    
+    // Create dishes map directly from the restaurant data
+    const dishesMap = {};
+    data.forEach(restaurant => {
+      dishesMap[restaurant.id] = restaurant.delicacies || [];
+    });
+    
+    setDishes(dishesMap);
+    setError(null);
+  } catch (err) {
+    setError('Failed to fetch restaurants');
+    console.error('Error fetching restaurants:', err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Add dish ordering handler
+  const handleOrderDish = (dish) => {
+    console.log('Ordering dish:', dish);
+    // Add your order logic here - could be adding to cart, etc.
+    alert(`Added ${dish.name} to cart!`);
+  };
+
+  // Add dish favorite handler
+  const handleFavoriteDish = (dish) => {
+    console.log('Toggling favorite for dish:', dish);
+    // Add your favorite logic here
   };
 
   const toggleRestaurant = (restaurantId) => {
@@ -216,75 +228,60 @@ const Restaurants = () => {
                 </div>
               </div>
 
-              {/* Expanded Menu Section */}
-              {expandedRestaurant === restaurant.id && (
-                <div className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white">
-                  <div className="p-8">
-                    <div className="flex items-center justify-between mb-6">
-                      <h4 className="text-xl font-bold text-gray-900 font-serif">Featured Dishes</h4>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="text-gray-600">{dishes[restaurant.id]?.length || 0} items</span>
-                      </div>
-                    </div>
+                {/* Expanded Menu Section - UPDATED */}
+  {expandedRestaurant === restaurant.id && (
+    <div className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white">
+      <div className="p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h4 className="text-xl font-bold text-gray-900 font-serif">Featured Dishes</h4>
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-gray-600">{dishes[restaurant.id]?.length || 0} items</span>
+          </div>
+        </div>
 
-                    {dishes[restaurant.id] && dishes[restaurant.id].length > 0 ? (
-                      <div className="grid gap-4">
-                        {dishes[restaurant.id].map((dish, dishIndex) => (
-                          <div 
-                            key={dish.id}
-                            className="flex items-center justify-between p-4 rounded-2xl bg-white border border-gray-200 hover:border-orange-300 hover:shadow-md transition-all duration-300 group"
-                          >
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <h5 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
-                                  {dish.name}
-                                </h5>
-                                {dish.isSpicy && (
-                                  <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">
-                                    🌶️ Spicy
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-gray-600 text-sm leading-relaxed mb-2">
-                                {dish.description}
-                              </p>
-                              {dish.ingredients && (
-                                <p className="text-xs text-gray-500">
-                                  {dish.ingredients}
-                                </p>
-                              )}
-                            </div>
-                            <div className="text-right ml-6">
-                              <p className="text-lg font-bold text-gray-900 mb-1">{dish.price} ₽</p>
-                              <button className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:from-orange-600 hover:to-red-600 transform hover:scale-105 transition-all duration-300">
-                                Add to Cart
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-12">
-                        <div className="text-6xl mb-4">🍽️</div>
-                        <p className="text-gray-600 text-lg mb-2">Menu Coming Soon</p>
-                        <p className="text-gray-500">Our chef is preparing something special!</p>
-                      </div>
-                    )}
+        {dishes[restaurant.id] && dishes[restaurant.id].length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {dishes[restaurant.id].map((dish) => (
+              <DishCard
+                key={dish.id}
+                dish={{
+                  id: dish.id,
+                  name: dish.name,
+                  description: dish.description || `Delicious ${dish.name} prepared with authentic African spices and fresh ingredients.`,
+                  price: dish.price,
+                  rating: dish.averageRating || 4.5, // Fallback if no rating
+                  image: dish.imagePath || getFoodImage(Math.random() * FOOD_IMAGES.length), // Fallback image
+                  vendor: restaurant.name,
+                  isFavorite: false // You can manage this state if needed
+                }}
+                onOrderClick={handleOrderDish}
+                onFavoriteClick={handleFavoriteDish}
+                showFavoriteButton={true}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🍽️</div>
+            <p className="text-gray-600 text-lg mb-2">Menu Coming Soon</p>
+            <p className="text-gray-500">Our chef is preparing something special!</p>
+          </div>
+        )}
 
-                    {/* Call to Action */}
-                    <div className="mt-8 pt-6 border-t border-gray-200">
-                      <div className="flex gap-4">
-                        <button className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-red-600 transform hover:scale-105 transition-all duration-300 shadow-xl">
-                          🛵 Order Now
-                        </button>
-                        <button className="px-8 py-4 border-2 border-orange-500 text-orange-500 rounded-2xl font-semibold hover:bg-orange-500 hover:text-white transition-all duration-300">
-                          View Full Menu
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+        {/* Call to Action */}
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="flex gap-4">
+            <button className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-red-600 transform hover:scale-105 transition-all duration-300 shadow-xl">
+              🛵 Order Now
+            </button>
+            <button className="px-8 py-4 border-2 border-orange-500 text-orange-500 rounded-2xl font-semibold hover:bg-orange-500 hover:text-white transition-all duration-300">
+              View Full Menu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
             </div>
           ))}
         </div>

@@ -1,6 +1,6 @@
-// src/components/DishCard.jsx
+// src/components/DishCard.jsx - Enhanced African Theme
 import React from 'react';
-import { Star, Heart } from 'lucide-react';
+import { Star, Heart, Clock } from 'lucide-react';
 
 const DishCard = ({ 
   dish, 
@@ -16,7 +16,8 @@ const DishCard = ({
     rating,
     image,
     vendor,
-    isFavorite = false
+    isFavorite = false,
+    preparationTime = '15-25 min' // Added preparation time
   } = dish;
 
   const handleOrderClick = () => {
@@ -33,61 +34,78 @@ const DishCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
-      {/* Image Container */}
-      <div className="relative h-48 bg-gray-200 overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group border border-orange-100">
+      {/* Image Container with African theme */}
+      <div className="relative h-48 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
         <img 
           src={image} 
           alt={name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
+        
+        {/* African pattern overlay */}
+        <div className="absolute inset-0 bg-african-pattern opacity-5 group-hover:opacity-10 transition-opacity duration-300"></div>
         
         {/* Favorite Button */}
         {showFavoriteButton && (
           <button
             onClick={handleFavoriteClick}
-            className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
+            className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-110"
           >
             <Heart 
               className={`h-5 w-5 ${
                 isFavorite 
-                  ? 'text-african-red fill-current' 
-                  : 'text-gray-400 hover:text-african-red'
+                  ? 'text-red-500 fill-current' 
+                  : 'text-gray-400 hover:text-red-500'
               } transition-colors`}
             />
           </button>
         )}
         
         {/* Rating Badge */}
-        <div className="absolute bottom-3 left-3 flex items-center space-x-1 bg-black bg-opacity-70 text-white px-2 py-1 rounded-full">
-          <Star className="h-3 w-3 text-yellow-400 fill-current" />
-          <span className="text-xs font-medium">{rating}</span>
+        {rating > 0 && (
+          <div className="absolute bottom-3 left-3 flex items-center space-x-1 bg-black/80 text-white px-3 py-2 rounded-2xl backdrop-blur-sm">
+            <Star className="h-4 w-4 text-amber-400 fill-current" />
+            <span className="text-sm font-bold">{rating.toFixed(1)}</span>
+          </div>
+        )}
+
+        {/* Preparation Time */}
+        <div className="absolute bottom-3 right-3 flex items-center space-x-1 bg-white/90 backdrop-blur-sm text-gray-700 px-3 py-2 rounded-2xl">
+          <Clock className="h-4 w-4 text-orange-500" />
+          <span className="text-sm font-medium">{preparationTime}</span>
         </div>
       </div>
 
       {/* Content */}
       <div className="p-6">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-xl font-semibold text-gray-900 line-clamp-1">{name}</h3>
-          <span className="text-african-gold font-bold text-lg">₽ {price}</span>
+        <div className="flex justify-between items-start mb-3">
+          <h3 className="text-xl font-bold text-gray-900 line-clamp-1 font-serif">{name}</h3>
+          <span className="text-2xl font-bold text-orange-600">₽{price}</span>
         </div>
         
-        <p className="text-gray-600 mb-4 line-clamp-2 min-h-[2.5rem]">{description}</p>
+        <p className="text-gray-600 mb-4 line-clamp-2 min-h-[2.5rem] leading-relaxed">
+          {description}
+        </p>
         
         <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center space-x-1">
-            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            <span className="text-sm text-gray-700">{rating}</span>
-            <span className="text-gray-400 mx-1">•</span>
-            <span className="text-sm text-gray-500 truncate">{vendor}</span>
+          <div className="flex items-center space-x-2">
+            {rating > 0 && (
+              <>
+                <Star className="h-4 w-4 text-amber-400 fill-current" />
+                <span className="text-sm text-gray-700 font-medium">{rating.toFixed(1)}</span>
+                <span className="text-gray-300 mx-1">•</span>
+              </>
+            )}
+            <span className="text-sm text-gray-500 truncate font-medium">{vendor}</span>
           </div>
         </div>
 
         <button 
           onClick={handleOrderClick}
-          className="w-full bg-african-red text-white py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold"
+          className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
         >
-          Order Now
+          Add to Cart
         </button>
       </div>
     </div>
