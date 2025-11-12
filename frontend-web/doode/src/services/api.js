@@ -64,6 +64,20 @@ export const dishService = {
   getById: (id) => api.get(`/dishes/${id}`).then(res => res.data),
   getByVendor: (vendorId) => api.get(`${vendorId}/dishes`).then(res => res.data),
   create: (data) => api.post(`${vendorId}/dishes`, data).then(res => res.data),
+
+  // Get dishes by city
+  getByCity: async (city) => {
+    const response = await fetch(`/api/dishes/${city}`);
+    if (!response.ok) throw new Error(`Failed to fetch dishes for ${city}`);
+    return response.json();
+  },
+  
+  // Get dishes by price range
+  getByPriceRange: async (minPrice, maxPrice) => {
+    const response = await fetch(`/api/dishes/price?min=${minPrice}&max=${maxPrice}`);
+    if (!response.ok) throw new Error('Failed to fetch dishes by price');
+    return response.json();
+  },
 };
 
 

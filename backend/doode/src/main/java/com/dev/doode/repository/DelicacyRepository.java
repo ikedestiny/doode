@@ -42,5 +42,7 @@ public interface DelicacyRepository extends JpaRepository<Delicacy, Long>, JpaSp
 
     // Find delicacies by city
     @Query("SELECT d FROM Delicacy d JOIN d.foodVendor v WHERE v.city = :city")
-    List<Delicacy> findByCity(@Param("city") City city);
+    List<Delicacy> findByFoodVendorCity(@Param("city") City city);
+
+
 }

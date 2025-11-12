@@ -4,6 +4,7 @@ import com.dev.doode.helpers.City;
 import com.dev.doode.model.*;
 import com.dev.doode.repository.FoodVendorRepository;
 import com.dev.doode.repository.DelicacyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -134,5 +135,10 @@ public class FoodVendorService {
         vendor.getReviews().put(clientId,review);
         foodVendorRepository.save(vendor);
         return review + "ADDED";
+    }
+
+    public List<Delicacy> addDelicaciesToVendor(FoodVendor vendor, List<Delicacy> delicacies) {
+        delicacies.forEach(delicacy -> delicacy.setFoodVendor(vendor));
+        return delicacyRepository.saveAll(delicacies);
     }
 }

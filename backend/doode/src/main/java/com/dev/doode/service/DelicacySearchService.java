@@ -34,7 +34,7 @@ public class DelicacySearchService {
     }
 
     public List<Delicacy> findDelicaciesByCity(City city) {
-        return delicacyRepository.findByCity(city);
+        return delicacyRepository.findByFoodVendorCity(city);
     }
 
     public List<Delicacy> findDelicaciesByVendor(Long vendorId) {

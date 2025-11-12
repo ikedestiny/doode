@@ -16,10 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -100,6 +102,47 @@ public class FoodVendorController {
             logger.error("Error adding delicacy to vendor {}: {}", vendorId, e.getMessage());
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Failed to add delicacy: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/{vendorId}/dishes/batch")
+    @Transactional
+    public ResponseEntity<?> addDelicacyBatchToVendor(
+            @PathVariable Long vendorId,
+            @RequestBody @Valid List<DelicacyDto> delicacyDtoList) {
+
+        try {
+            // Validate vendor exists
+            FoodVendor vendor = foodVendorService.getVendorById(vendorId);
+            if (vendor == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Vendor not found with id: " + vendorId));
+            }
+
+            // Convert DTOs to entities
+            List<Delicacy> delicacies = delicacyDtoList.stream()
+                    .map(dto -> {
+                        Delicacy delicacy = new Delicacy();
+                        delicacy.setName(dto.name());
+                        delicacy.setPrice(dto.price());
+                        delicacy.setDescription(dto.description());
+                        delicacy.setImagePath(dto.imagePath());
+                        delicacy.setAverageRating(0.0);
+                        delicacy.setTotalRatings(0);
+                        return delicacy;
+                    })
+                    .collect(Collectors.toList());
+
+            // Batch save
+            List<Delicacy> savedDelicacies = foodVendorService.addDelicaciesToVendor(vendor, delicacies);
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(savedDelicacies);
+
+        } catch (Exception e) {
+            logger.error("Error adding batch to vendor {}: {}", vendorId, e.getMessage(), e);
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Failed to add delicacies: " + e.getMessage()));
         }
     }
 

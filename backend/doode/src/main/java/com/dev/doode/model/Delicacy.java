@@ -24,7 +24,18 @@ public class Delicacy {
     @JsonIgnore
     private FoodVendor foodVendor;
 
+    private String city ;
+
     // Consider adding rating fields for search/sorting
     private Double averageRating = 0.0;
     private Integer totalRatings = 0;
+
+    @PostLoad
+    @PrePersist
+    @PreUpdate
+    public void updateCity() {
+        if (this.foodVendor != null && this.foodVendor.getCity() != null) {
+            this.city = this.foodVendor.getCity().name();
+        }
+    }
 }
