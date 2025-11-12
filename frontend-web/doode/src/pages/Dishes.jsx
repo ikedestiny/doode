@@ -272,9 +272,9 @@ const Dishes = () => {
                   description: dish.description || `Delicious ${dish.name} prepared with authentic African spices.`,
                   price: dish.price,
                   rating: dish.averageRating || 4.0,
-                  image: dish.imagePath || getFoodImage(dish.id),
+                  imagePath: dish.imagePath,
                   vendor: dish.foodVendor?.name || 'African Restaurant',
-                  city: dish.foodVendor?.city ? formatCityName(dish.foodVendor.city) : '',
+                  city: dish.city ? formatCityName(dish.city) : '',
                   isFavorite: false
                 }}
                 onOrderClick={handleOrderDish}

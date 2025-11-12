@@ -26,24 +26,24 @@ const VendorProfile = () => {
   const [editingDish, setEditingDish] = useState(null);
 
   const handleAddDish = async (dishData) => {
-    try {
-      await addDish(dishData);
-      setShowAddDishModal(false);
-    } catch (error) {
-      console.error('Error adding dish:', error);
-      alert('Failed to add dish: ' + error.message);
-    }
-  };
+  try {
+    await addDish(dishData); // Just pass dishData, vendorId is in the hook
+    setShowAddDishModal(false);
+  } catch (error) {
+    console.error('Error adding dish:', error);
+    // Error is already handled in the hook
+  }
+};
 
   const handleEditDish = async (dishId, dishData) => {
-    try {
-      await updateDish(dishId, dishData);
-      setEditingDish(null);
-    } catch (error) {
-      console.error('Error updating dish:', error);
-      alert('Failed to update dish: ' + error.message);
-    }
-  };
+  try {
+    await updateDish(dishId, dishData);
+    setEditingDish(null);
+  } catch (error) {
+    console.error('Error updating dish:', error);
+    // Error is already handled in the hook
+  }
+};
 
   const handleDeleteDish = async (dishId) => {
     if (window.confirm('Are you sure you want to delete this dish?')) {

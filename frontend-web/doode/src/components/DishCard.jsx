@@ -14,7 +14,7 @@ const DishCard = ({
     description,
     price,
     rating,
-    image,
+    imagePath,
     vendor,
     isFavorite = false,
     preparationTime = '15-25 min' // Added preparation time
@@ -38,7 +38,7 @@ const DishCard = ({
       {/* Image Container with African theme */}
       <div className="relative h-48 bg-gradient-to-br from-orange-100 to-amber-50 overflow-hidden">
         <img 
-          src={image} 
+          src={imagePath} 
           alt={name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />

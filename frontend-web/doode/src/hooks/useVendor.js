@@ -1,41 +1,3 @@
-// import { useState, useEffect } from 'react';
-// import { vendorService } from '../services/api';
-
-// export const useVendor = (vendorId) => {
-//   const [vendor, setVendor] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     fetchVendor();
-//   }, [vendorId]);
-
-//   const fetchVendor = async () => {
-//     try {
-//       setLoading(true);
-//       setError(null);
-//       const vendorData = await vendorService.getVendorById(vendorId);
-//       setVendor(vendorData);
-//     } catch (err) {
-//       setError(err.message);
-//       console.error('Error fetching vendor data:', err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const refreshVendor = () => {
-//     fetchVendor();
-//   };
-
-//   return {
-//     vendor,
-//     loading,
-//     error,
-//     refreshVendor
-//   };
-// };
-
 import { useState, useEffect } from 'react';
 import { vendorService } from '../services/api';
 import { mockVendorData } from '../data/mockVendorData';
@@ -68,7 +30,7 @@ export const useVendor = (vendorId) => {
       } else {
         // Use real API
         vendorData = await vendorService.getVendorById(vendorId);
-        console.log(vendorData)
+        console.log('Vendor data:', vendorData);
       }
       
       setVendor(vendorData);
@@ -87,50 +49,91 @@ export const useVendor = (vendorId) => {
   // Mock service functions for development
   const addDishMock = async (dishData) => {
     await new Promise(resolve => setTimeout(resolve, 500));
+    
     const newDish = {
       id: Date.now(), // Temporary ID
       ...dishData,
       averageRating: 0,
-      totalRatings: 0
+      totalRatings: 0,
+      imagePath: dishData.imagePath || '/images/placeholder-food.jpg' // Ensure imagePath is set
     };
+    
     setVendor(prev => ({
       ...prev,
       delicacies: [...prev.delicacies, newDish]
     }));
+    
+    return newDish;
   };
 
   const updateDishMock = async (dishId, dishData) => {
     await new Promise(resolve => setTimeout(resolve, 500));
+    
     setVendor(prev => ({
       ...prev,
       delicacies: prev.delicacies.map(dish => 
         dish.id === dishId ? { ...dish, ...dishData } : dish
       )
     }));
+    
+    return { id: dishId, ...dishData };
   };
 
   const deleteDishMock = async (dishId) => {
     await new Promise(resolve => setTimeout(resolve, 500));
+    
     setVendor(prev => ({
       ...prev,
       delicacies: prev.delicacies.filter(dish => dish.id !== dishId)
     }));
+    
+    return { success: true };
   };
 
-  const addDish = USE_MOCK_DATA ? addDishMock : async (dishData) => {
-    await vendorService.addDishToVendor(vendorId, dishData);
-    await refreshVendor();
+  // Real API functions
+  const addDishReal = async (dishData) => {
+    try {
+      // Ensure the dish data includes the vendorId
+      const dishWithVendor = {
+        ...dishData,
+        vendorId: vendorId
+      };
+      
+      const response = await vendorService.addDishToVendor(vendorId, dishWithVendor);
+      await refreshVendor(); // Refresh to get the latest data
+      return response;
+    } catch (error) {
+      console.error('Error adding dish:', error);
+      throw error;
+    }
   };
 
-  const updateDish = USE_MOCK_DATA ? updateDishMock : async (dishId, dishData) => {
-    await vendorService.updateDish(vendorId, dishId, dishData);
-    await refreshVendor();
+  const updateDishReal = async (dishId, dishData) => {
+    try {
+      const response = await vendorService.updateDish(vendorId, dishId, dishData);
+      await refreshVendor(); // Refresh to get the latest data
+      return response;
+    } catch (error) {
+      console.error('Error updating dish:', error);
+      throw error;
+    }
   };
 
-  const deleteDish = USE_MOCK_DATA ? deleteDishMock : async (dishId) => {
-    await vendorService.deleteDish(vendorId, dishId);
-    await refreshVendor();
+  const deleteDishReal = async (dishId) => {
+    try {
+      const response = await vendorService.deleteDish(vendorId, dishId);
+      await refreshVendor(); // Refresh to get the latest data
+      return response;
+    } catch (error) {
+      console.error('Error deleting dish:', error);
+      throw error;
+    }
   };
+
+  // Export the appropriate functions based on mode
+  const addDish = USE_MOCK_DATA ? addDishMock : addDishReal;
+  const updateDish = USE_MOCK_DATA ? updateDishMock : updateDishReal;
+  const deleteDish = USE_MOCK_DATA ? deleteDishMock : deleteDishReal;
 
   return {
     vendor,
